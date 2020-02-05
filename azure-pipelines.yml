@@ -41,4 +41,4 @@ steps:
 
 - task: CmdLine@2
   inputs:
-    script: Hola mundo!
+    script: date
