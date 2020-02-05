@@ -39,6 +39,5 @@ steps:
   inputs:
     testRunner: DotNetCoreCLI
 
-- task: CmdLine@2
-  inputs:
-    script: echo Hols mundo!
+- script: echo Hola Azure Pipelines!
+  displayName: 'Hola'
