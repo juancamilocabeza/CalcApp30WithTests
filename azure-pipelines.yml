@@ -28,11 +28,6 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: VSTest@2
-  inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-    
 - task: DotNetCoreCLI@2
   inputs:
     command: test
@@ -42,7 +37,7 @@ steps:
 - task: PublishTestResults@2
   condition: succeededOrFailed()
   inputs:
-    testRunner: VSTest
+    testRunner: DotNetCoreCLI
 
 - task: CmdLine@2
   inputs:
