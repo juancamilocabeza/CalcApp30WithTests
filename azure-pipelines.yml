@@ -1,23 +1,84 @@
+#1. DISPARADOR
+
 trigger:
 - master
 
-stages:
-- stage: Build
-  jobs:
-  - job: Build
-    pool:
-      vmImage: 'ubuntu-latest'
-      steps:
-      - script: echo "hello to my first Build!!!"
+#2. AGENTE
+pool:
+  vmImage: 'windows-latest'
 
-- stage: dev_deploy
+#3. VARIABLES
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+stages:
+- stage: Build_Stage
   jobs:
-  - deployment: dev_deploy
-    pool:
-      vmImage: 'ubuntu-latest'
-    environment: 'dev-hello'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - script: echo "hello, dev world!!!!"
+  - job: Build_Job
+    #pool:
+      #vmImage: 'ubuntu-latest'
+    steps:
+    
+    #4. ADMINISTRADOR DE PAQUETES
+    - task: NuGetToolInstaller@1
+      displayName: 'Instalar Nuget en agente'
+    
+    #5. RESTAURO DEPENDENCIAS PROPIAS
+    - task: NuGetCommand@2
+      inputs:
+        restoreSolution: '$(solution)'
+      displayName: 'Restaurar dependencias con Nuget'
+    
+    #6. CONSTRUCCIÓN O BUILD
+    - task: VSBuild@1
+      inputs:
+        solution: '$(solution)'
+        msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+        platform: '$(buildPlatform)'
+        configuration: '$(buildConfiguration)'
+
+- stage: Test_Stage
+  jobs:
+  - job: Test_Job
+    #pool:
+      #vmImage: 'ubuntu-latest'
+    steps:
+
+    #6. EJECUTAR PRUEBAS
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: test
+        projects: '**/*Tests/*.csproj'
+        #arguments: '--configuration $(buildConfiguration)'
+        arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+
+    #7. PUBLICAR RESULTADO DE LAS PRUEBAS*
+    - script: dotnet test test\CalcMvcWeb.Tests\CalcMvcWeb.Tests.csproj --logger trx --collect "Code coverage"
+    - task: PublishTestResults@2
+      condition: succeededOrFailed()
+      inputs:
+        testRunner: VSTest
+        testResultsFiles: 'd:\a\_temp\*.trx'
+        
+- stage: Publish_Stage
+  jobs:
+  - job: Publish_Job
+    #pool:
+      #vmImage: 'ubuntu-latest'
+    steps:
+
+    #8. CREAR ARTEFACTO    
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: publish
+        publishWebProjects: True
+        arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+        zipAfterPublish: True
+
+    #9. PUBLICAR ARTEFACTO  
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+        artifactName: 'CalcApp'
