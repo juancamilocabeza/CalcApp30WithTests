@@ -14,5 +14,14 @@ variables:
   buildConfiguration: 'Release'
 
 #4. ADMINISTRADOR DE PAQUETES
-steps:
-- task: NuGetToolInstaller@1
+stages:
+- stage: Build
+  jobs:
+  - job: Build
+    #pool:
+      #vmImage: 'ubuntu-latest'
+    steps:
+    - task: NuGetToolInstaller@1
+    - task: NuGetCommand@2
+      inputs:
+        restoreSolution: '$(solution)'
