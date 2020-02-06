@@ -55,6 +55,7 @@ stages:
         arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
 
     #7. PUBLICAR RESULTADO DE LAS PRUEBAS*
+    - script: dotnet test CalcMvcWeb.Tests --logger trx --collect "Code coverage"
     - task: PublishTestResults@2
       condition: succeededOrFailed()
       inputs:
