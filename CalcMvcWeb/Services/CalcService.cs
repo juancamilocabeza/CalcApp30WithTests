@@ -60,7 +60,7 @@ namespace CalcMvcWeb.Services
             }
             catch (DivideByZeroException e)
             {
-                return e;
+                return -1;
             }
             return result;
         }
