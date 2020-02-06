@@ -13,17 +13,32 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
-#4. ADMINISTRADOR DE PAQUETES
 stages:
+- stage: Paquetes
+  jobs:
+  - job: Paquetes
+    #pool:
+      #vmImage: 'ubuntu-latest'
+    steps:
+    #4. ADMINISTRADOR DE PAQUETES
+    - task: NuGetToolInstaller@1
+      displayName: 'Instalar Nuget en agente'
+    #5. RESTAURO DEPENDENCIAS PROPIAS
+    - task: NuGetCommand@2
+      inputs:
+        restoreSolution: '$(solution)'
+      displayName: 'Restaurar dependencias con Nuget'
+
 - stage: Build
   jobs:
   - job: Build
     #pool:
       #vmImage: 'ubuntu-latest'
     steps:
-    - task: NuGetToolInstaller@1
-      displayName: 'Instalar Nuget en agente'
-    - task: NuGetCommand@2
+    #5. CONSTRUCCIÓN O BUILD
+    - task: VSBuild@1
       inputs:
-        restoreSolution: '$(solution)'
-      displayName: 'Restaurar dependencias con Nuget'
+        solution: '$(solution)'
+        msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+        platform: '$(buildPlatform)'
+        configuration: '$(buildConfiguration)'
