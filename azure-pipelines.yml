@@ -59,3 +59,24 @@ stages:
       inputs:
         testRunner: Xunit
         testResultsFiles: '**/*.trx'
+
+- stage: Publish_Stage
+  jobs:
+  - job: Publish_Job
+    #pool:
+      #vmImage: 'ubuntu-latest'
+    steps:
+
+    #8. CREAR ARTEFACTO    
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: publish
+        publishWebProjects: True
+        arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+        zipAfterPublish: True
+
+    #9. PUBLICAR ARTEFACTO  
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+        artifactName: 'CalcApp'
