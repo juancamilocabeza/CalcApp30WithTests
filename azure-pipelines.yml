@@ -51,7 +51,8 @@ stages:
       inputs:
         command: test
         projects: '**/*Tests/*.csproj'
-        arguments: '--configuration $(buildConfiguration)'
+        #arguments: '--configuration $(buildConfiguration)'
+        arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
 
     #7. PUBLICAR RESULTADO DE LAS PRUEBAS*
     - task: PublishTestResults@2
