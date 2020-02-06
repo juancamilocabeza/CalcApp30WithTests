@@ -22,6 +22,8 @@ stages:
       #vmImage: 'ubuntu-latest'
     steps:
     - task: NuGetToolInstaller@1
+      displayName: 'Instalar Nuget en agente'
     - task: NuGetCommand@2
       inputs:
         restoreSolution: '$(solution)'
+      displayName: 'Restaurar dependencias con Nuget'
