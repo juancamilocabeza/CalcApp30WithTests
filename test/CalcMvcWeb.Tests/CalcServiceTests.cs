@@ -10,7 +10,7 @@ namespace CalcMvcWeb.Tests
     {
         [Trait("Math Ops", "Simple")]
         [Theory(DisplayName = "Add Numbers")]
-        [InlineData(4, 5, 13)]
+        [InlineData(4, 5, 9)]
         [InlineData(2, 3, 5)]
         public void TestAddNumbers(int x, int y, int expectedResult)
         {
@@ -27,7 +27,7 @@ namespace CalcMvcWeb.Tests
         [Trait("Math Ops", "Simple")]
         [Theory]
         [InlineData(4, 5, -1)]
-        [InlineData(12, 3, 12)]
+        [InlineData(12, 3, 9)]
         public void TestSubtractNumbers(int x, int y, int expectedResult)
         {
             var cs = new CalcService();
