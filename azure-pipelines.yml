@@ -14,31 +14,48 @@ variables:
   buildConfiguration: 'Release'
 
 stages:
-- stage: Paquetes
+- stage: Build_Stage
   jobs:
-  - job: Paquetes
+  - job: Build_Job
     #pool:
       #vmImage: 'ubuntu-latest'
     steps:
+    
     #4. ADMINISTRADOR DE PAQUETES
     - task: NuGetToolInstaller@1
       displayName: 'Instalar Nuget en agente'
+    
     #5. RESTAURO DEPENDENCIAS PROPIAS
     - task: NuGetCommand@2
       inputs:
         restoreSolution: '$(solution)'
       displayName: 'Restaurar dependencias con Nuget'
-
-- stage: Build
-  jobs:
-  - job: Build
-    #pool:
-      #vmImage: 'ubuntu-latest'
-    steps:
-    #5. CONSTRUCCIÓN O BUILD
+    
+    #6. CONSTRUCCIÓN O BUILD
     - task: VSBuild@1
       inputs:
         solution: '$(solution)'
         msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
+
+- stage: Test_Stage
+  jobs:
+  - job: Test_Job
+    #pool:
+      #vmImage: 'ubuntu-latest'
+    steps:
+
+    #6. EJECUTAR PRUEBAS
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: test
+        projects: '**/*Tests/*.csproj'
+        arguments: '--configuration $(buildConfiguration)'
+
+    #7. PUBLICAR RESULTADO DE LAS PRUEBAS*
+    - task: PublishTestResults@2
+      condition: succeededOrFailed()
+      inputs:
+        testRunner: Xunit
+        testResultsFiles: '**/*.trx'
