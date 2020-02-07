@@ -14,7 +14,7 @@ stages:
   jobs:
   - deployment: qa_deploy
     pool:
-      vmImage: 'mac-latest'
+      vmImage: 'macOS-latest'
     environment: 'qa'
     strategy:
       runOnce:
