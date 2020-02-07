@@ -14,7 +14,7 @@ stages:
   jobs:
   - deployment: qa_deploy
     pool:
-      vmImage: 'ubuntu-latest'
+      vmImage: 'mac-latest'
     environment: 'qa'
     strategy:
       runOnce:
@@ -26,7 +26,7 @@ stages:
   jobs:
   - deployment: production_deploy
     pool:
-      vmImage: 'ubuntu-latest'
+      vmImage: 'windows-latest'
     environment: 'production'
     strategy:
       runOnce:
