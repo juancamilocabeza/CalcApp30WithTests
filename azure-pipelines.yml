@@ -83,10 +83,10 @@ stages:
         pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
         artifactName: 'CalcApp'
 
-      - task: AzureWebApp@1
-        inputs:
-          azureSubscription: 'Azure subscription 1(bd3209a1-72b2-40bd-8af1-639afe4d5e33)'
-          appType: 'webApp'
-          appName: 'CalcApp'
-          package: '$(System.DefaultWorkingDirectory)/**/*.zip'
-          deploymentMethod: 'auto'
+    - task: AzureWebApp@1
+      inputs:
+        azureSubscription: 'Azure subscription 1(bd3209a1-72b2-40bd-8af1-639afe4d5e33)'
+        appType: 'webApp'
+        appName: 'CalcApp'
+        package: '$(System.DefaultWorkingDirectory)/**/*.zip'
+        deploymentMethod: 'auto'
