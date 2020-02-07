@@ -5,7 +5,7 @@ trigger:
 
 #2. AGENTE
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'windows-latest'
 
 #3. VARIABLES
 variables:
