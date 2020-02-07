@@ -82,3 +82,14 @@ stages:
       inputs:
         pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
         artifactName: 'CalcApp'
+
+    - task: AzureFileCopy@3
+      inputs:
+        SourcePath: 'CalcApp'
+        azureSubscription: 'Azure subscription 1(bd3209a1-72b2-40bd-8af1-639afe4d5e33)'
+        Destination: 'AzureVMs'
+        storage: 'gruporecursosdiag839'
+        resourceGroup: 'GRUPO_RECURSOS'
+        vmsAdminUserName: 'juan'
+        vmsAdminPassword: 'Federico1983'
+        TargetPath: '$env:windir\'
