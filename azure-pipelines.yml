@@ -37,25 +37,25 @@ stages:
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
 
-- stage: Test_Stage
-  jobs:
-  - job: Test_Job
-    steps:
+#- stage: Test_Stage
+#  jobs:
+#  - job: Test_Job
+#    steps:
 
     #6. EJECUTAR PRUEBAS
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: test
-        projects: '**/*Tests/*.csproj'
-        arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+#    - task: DotNetCoreCLI@2
+#      inputs:
+#        command: test
+#        projects: '**/*Tests/*.csproj'
+#        arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
 
     #7. PUBLICAR RESULTADO DE LAS PRUEBAS*
-    - script: dotnet test test\CalcMvcWeb.Tests\CalcMvcWeb.Tests.csproj --logger trx --collect "Code coverage"
-    - task: PublishTestResults@2
-      condition: succeededOrFailed()
-      inputs:
-        testRunner: VSTest
-        testResultsFiles: 'd:\a\_temp\*.trx'
+#    - script: dotnet test test\CalcMvcWeb.Tests\CalcMvcWeb.Tests.csproj --logger trx --collect "Code coverage"
+#    - task: PublishTestResults@2
+#      condition: succeededOrFailed()
+#      inputs:
+#        testRunner: VSTest
+#        testResultsFiles: 'd:\a\_temp\*.trx'
         
 - stage: Publish_Stage
   jobs:
