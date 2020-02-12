@@ -24,10 +24,10 @@ stages:
       displayName: 'Instalar Nuget en agente'
     
     #5. RESTAURO DEPENDENCIAS PROPIAS
-#    - task: NuGetCommand@2
-#      inputs:
-#        restoreSolution: '$(solution)'
-#      displayName: 'Restaurar dependencias con Nuget'
+    - task: NuGetCommand@2
+      inputs:
+        restoreSolution: '$(solution)'
+      displayName: 'Restaurar dependencias con Nuget'
 
     - task: NuGetCommand@2
       inputs:
