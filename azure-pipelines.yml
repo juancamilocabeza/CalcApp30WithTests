@@ -36,6 +36,18 @@ stages:
         msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
+    
+    - task: NuGetCommand@2
+      inputs:
+        command: pack
+        packagesToPack: '**/*.csproj'
+
+    - task: NuGetCommand@2
+      inputs:
+        command: 'push'
+        packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+        nuGetFeedType: 'internal'
+        publishVstsFeed: '434fb3e2-4c80-4681-9c34-dbf612358774/c514e89f-7127-49a6-baed-3122d42d3f0c' 
 
 #- stage: Test_Stage
 #  jobs:
@@ -74,16 +86,4 @@ stages:
     - task: PublishBuildArtifacts@1
       inputs:
         pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
-        artifactName: 'CalcApp'
-
-    - task: NuGetCommand@2
-      inputs:
-        command: 'pack'
-        packagesToPack: '**/*.csproj'
-        versioningScheme: 'off'
-    - task: NuGetCommand@2
-      inputs:
-        command: 'push'
-        packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
-        nuGetFeedType: 'internal'
-        publishVstsFeed: '434fb3e2-4c80-4681-9c34-dbf612358774/c514e89f-7127-49a6-baed-3122d42d3f0c'   
+        artifactName: 'CalcApp'  
