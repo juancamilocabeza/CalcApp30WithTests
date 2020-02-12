@@ -20,14 +20,21 @@ stages:
     steps:
     
     #4. ADMINISTRADOR DE PAQUETES
-    - task: NuGetToolInstaller@1
-      displayName: 'Instalar Nuget en agente'
+#    - task: NuGetToolInstaller@1
+#      displayName: 'Instalar Nuget en agente'
     
     #5. RESTAURO DEPENDENCIAS PROPIAS
+#    - task: NuGetCommand@2
+#      inputs:
+#        restoreSolution: '$(solution)'
+#      displayName: 'Restaurar dependencias con Nuget'
+
     - task: NuGetCommand@2
       inputs:
-        restoreSolution: '$(solution)'
-      displayName: 'Restaurar dependencias con Nuget'
+        command: 'push'
+        packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+        nuGetFeedType: 'internal'
+        publishVstsFeed: '434fb3e2-4c80-4681-9c34-dbf612358774/c514e89f-7127-49a6-baed-3122d42d3f0c'
     
     #6. CONSTRUCCIÓN O BUILD
     - task: VSBuild@1
