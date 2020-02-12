@@ -20,8 +20,8 @@ stages:
     steps:
     
     #4. ADMINISTRADOR DE PAQUETES
-#    - task: NuGetToolInstaller@1
-#      displayName: 'Instalar Nuget en agente'
+    - task: NuGetToolInstaller@1
+      displayName: 'Instalar Nuget en agente'
     
     #5. RESTAURO DEPENDENCIAS PROPIAS
 #    - task: NuGetCommand@2
