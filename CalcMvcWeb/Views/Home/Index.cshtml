@@ -2,8 +2,12 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div>
+<h1>POC Kushki</h1>
+
+<!--<div>
     <h1>Calc Service Demo con Azure Devops Pipelines FINAL</h1>
+    <h1>POC Kushki</h1>
+
     <h2>@Html.ActionLink("Run It", "Index", "Calc")</h2>
     <p>
         Source Code: <a href="https://github.com/shahedc/CalcApp30WithTests">https://github.com/shahedc/CalcApp30WithTests</a>
@@ -14,4 +18,64 @@
             <li>Unit Testing with xUnit.net</li>
         </ul>
     </p>
+</div>-->
+
+<!--
+<div>
+    <h2>Tarjeta credito</h2>
+    <form id="kushki-pay-form-tc" action="confirm" method="post">
+        <input type="hidden" name="cart_id" value="123">
+    </form>
+
+    <script type="text/javascript">
+        var kushki = new KushkiCheckout({
+            form: "kushki-pay-form-tc",
+            merchant_id: "6000000000158326631045579398670",
+            amount: "1000",
+            currency: "COP",
+            payment_methods: ["credit-card"], // Payment Methods enabled
+            inTestEnvironment: true,
+            regional: false, // Optional
+        });
+    </script>
 </div>
+-->
+
+
+<div>
+    <form id="kushki-pay-form-pse" action="confirm" method="post">
+        <input type="hidden" name="cart_id" value="123">
+    </form>
+    <script type="text/javascript">
+        var kushki = new KushkiCheckout({
+            form: "kushki-pay-form-pse",
+            merchant_id: "6000000000158326631045574555667",
+            amount: {
+                "subtotalIva": 0,
+                "iva": 0,
+                "subtotalIva0": 10000,
+                "ice": 0
+            },
+            currency: "COP",
+            payment_methods: ["transfer"], // Payment Methods enabled
+            inTestEnvironment: true,
+            callback_url: "https://t72ajthpqukj.runscope.net" // Not required for Mexico
+        });
+    </script>
+</div>
+
+<!--<div>
+    <form id="kushki-pay-form-efective" action="confirm" method="post">
+        <input type="hidden" name="cart_id" value="123">
+    </form>
+    <script type="text/javascript">
+        var kushki = new KushkiCheckout({
+            form: "kushki-pay-form-efective",
+            merchant_id: "6000000000158326631045574555667",
+            amount: "10000",
+            currency: "COP",
+      	    payment_methods:["cash"] , // Payment Methods enabled
+      	    inTestEnvironment: true
+        });
+    </script>
+</div>-->
