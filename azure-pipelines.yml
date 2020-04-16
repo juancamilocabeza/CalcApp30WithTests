@@ -7,15 +7,6 @@ trigger:
 pool:
   vmImage: 'windows-latest'
 
-#3. VARIABLES#1. DISPARADOR
-
-trigger:
-- master
-
-#2. AGENTE
-pool:
-  vmImage: 'windows-latest'
-
 #3. VARIABLES
 variables:
   solution: '**/*.sln'
@@ -97,84 +88,3 @@ stages:
      # inputs:
       #  pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
        # artifactName: 'CalcApp'  
-
-variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
-
-stages:
-- stage: Build_Stage
-  jobs:
-  - job: Build_Job
-    steps:
-    
-    #4. ADMINISTRADOR DE PAQUETES
-    - task: NuGetToolInstaller@1
-      displayName: 'Instalar Nuget en agente'
-    
-    #5. RESTAURO DEPENDENCIAS PROPIAS
-    - task: NuGetCommand@2
-      inputs:
-        restoreSolution: '$(solution)'
-      displayName: 'Restaurar dependencias con Nuget'
-
-    #6. CONSTRUCCIÓN O BUILD
-    - task: VSBuild@1
-      inputs:
-        solution: '$(solution)'
-        msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-        platform: '$(buildPlatform)'
-        configuration: '$(buildConfiguration)'
-    
-    - task: NuGetCommand@2
-      inputs:
-        command: pack
-        packagesToPack: '**/*.csproj'
-
-    - task: NuGetCommand@2
-      inputs:
-        command: 'push'
-        packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
-        nuGetFeedType: 'internal'
-        publishVstsFeed: '434fb3e2-4c80-4681-9c34-dbf612358774/c514e89f-7127-49a6-baed-3122d42d3f0c'
-        allowPackageConflicts: true
-
-#- stage: Test_Stage
-#  jobs:
-#  - job: Test_Job
-#    steps:
-
-    #6. EJECUTAR PRUEBAS
-#    - task: DotNetCoreCLI@2
-#      inputs:
-#        command: test
-#        projects: '**/*Tests/*.csproj'
-#        arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
-
-    #7. PUBLICAR RESULTADO DE LAS PRUEBAS*
-#    - script: dotnet test test\CalcMvcWeb.Tests\CalcMvcWeb.Tests.csproj --logger trx --collect "Code coverage"
-#    - task: PublishTestResults@2
-#      condition: succeededOrFailed()
-#      inputs:
-#        testRunner: VSTest
-#        testResultsFiles: 'd:\a\_temp\*.trx'
-        
-- stage: Publish_Stage
-  jobs:
-  - job: Publish_Job
-    steps:
-
-    #8. CREAR ARTEFACTO    
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: publish
-        publishWebProjects: True
-        arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-        zipAfterPublish: False
-
-    #9. PUBLICAR ARTEFACTO  
-    - task: PublishBuildArtifacts@1
-      inputs:
-        pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
-        artifactName: 'CalcApp'  
